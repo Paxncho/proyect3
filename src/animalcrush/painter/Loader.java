@@ -16,7 +16,7 @@ public class Loader {
             return image;
         }
         
-        image = new Image(Painter.class.getResourceAsStream("/candycrush/images/" + filename));
+        image = new Image(Painter.class.getResourceAsStream("/animalcrush/images/" + filename));
         Loader.IMAGES.put(filename, image);
         return image;
     }

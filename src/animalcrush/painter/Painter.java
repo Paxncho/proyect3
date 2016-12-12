@@ -11,15 +11,24 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Painter {
 
-    static public void paint(AnimalCrush game, GraphicsContext context, Dimension world, Dimension window){
+    static public void paint(AnimalCrush game, GraphicsContext context, Dimension world, Dimension window, int i1, int j1){
         
         Animal[][] board = game.getBoard();
         for (int i = 0; i < game.getBoardHeight(); i++){
             for (int j = 0; j < game.getBoardWidth(); j++){
-                Painter.draw(board[i][j], context, world, window);
+                if( i == i1 && j == j1 )
+                {
+                    
+                }
+                else
+                {
+                    Painter.draw(board[i][j], context, world, window);
+                }
+                System.out.print(board[i][j].getType().ordinal() + " ");
             }
+            System.out.println("");
         }
-        
+        System.out.println("---------------");
     }
     
     static private void draw(Animal candy, GraphicsContext context, Dimension world, Dimension window)
