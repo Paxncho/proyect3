@@ -1,9 +1,9 @@
-package candycrush;
+package animalcrush;
 
-import candycrush.model.CandyCrush;
-import candycrush.model.Dimension;
-import candycrush.painter.Loader;
-import candycrush.painter.Painter;
+import animalcrush.model.AnimalCrush;
+import animalcrush.model.Dimension;
+import animalcrush.painter.Loader;
+import animalcrush.painter.Painter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
@@ -17,9 +17,9 @@ import javafx.scene.input.MouseEvent;
  * @author pencho
  */
 
-public class FXCandyCrushCanvas extends Canvas implements EventHandler, ChangeListener{
+public class FXAnimalCrushCanvas extends Canvas implements EventHandler, ChangeListener{
 
-    private CandyCrush candyCrush;
+    private AnimalCrush candyCrush;
     private final GraphicsContext context;
     private int firstX;
     private int firstY;
@@ -27,8 +27,8 @@ public class FXCandyCrushCanvas extends Canvas implements EventHandler, ChangeLi
     private int lastY;
     
     
-    public FXCandyCrushCanvas(){
-        this.candyCrush = new CandyCrush(9, 9);
+    public FXAnimalCrushCanvas(){
+        this.candyCrush = new AnimalCrush(9, 9);
         this.context = super.getGraphicsContext2D();
         
         this.addEventHandler(MouseEvent.MOUSE_PRESSED, this);

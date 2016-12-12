@@ -1,8 +1,8 @@
-package candycrush.painter;
+package animalcrush.painter;
 
-import candycrush.model.Animal;
-import candycrush.model.CandyCrush;
-import candycrush.model.Dimension;
+import animalcrush.model.Animal;
+import animalcrush.model.AnimalCrush;
+import animalcrush.model.Dimension;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -11,7 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Painter {
 
-    static public void paint(CandyCrush game, GraphicsContext context, Dimension world, Dimension window){
+    static public void paint(AnimalCrush game, GraphicsContext context, Dimension world, Dimension window){
         
         Animal[][] board = game.getBoard();
         for (int i = 0; i < game.getBoardHeight(); i++){

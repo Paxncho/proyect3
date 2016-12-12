@@ -1,7 +1,7 @@
 
-package candycrush.model;
+package animalcrush.model;
 
-import candycrush.model.Animal;
+import animalcrush.model.Animal;
 
 /**
  * @author Pencho

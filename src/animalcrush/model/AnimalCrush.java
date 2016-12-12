@@ -1,6 +1,5 @@
-package candycrush.model;
+package animalcrush.model;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -8,7 +7,7 @@ import java.util.Random;
  */
 
 
-public class CandyCrush {
+public class AnimalCrush {
 
     private Dimension world;
     private Animal[][] board;
@@ -17,7 +16,7 @@ public class CandyCrush {
     
     private boolean running;
     
-    public CandyCrush(int totalCandiesHorizontal, int totalCandiesVertical){
+    public AnimalCrush(int totalCandiesHorizontal, int totalCandiesVertical){
         this.world = new Dimension(totalCandiesHorizontal, totalCandiesVertical);
         
         this.totalCandiesHorizontal = totalCandiesHorizontal;

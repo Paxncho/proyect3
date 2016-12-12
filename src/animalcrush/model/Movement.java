@@ -1,4 +1,4 @@
-package candycrush.model;
+package animalcrush.model;
 
 /**
  * @author pencho

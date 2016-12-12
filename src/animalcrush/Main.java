@@ -1,4 +1,4 @@
-package candycrush;
+package animalcrush;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -15,7 +15,7 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXCandyCrushStage stage = new FXCandyCrushStage();
+        FXAnimalCrushStage stage = new FXAnimalCrushStage();
         stage.show();
     }
     

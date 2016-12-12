@@ -1,4 +1,4 @@
-package candycrush;
+package animalcrush;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -8,12 +8,12 @@ import javafx.stage.Stage;
  * @author pencho
  */
 
-public class FXCandyCrushStage extends Stage{
+public class FXAnimalCrushStage extends Stage{
 
-    public FXCandyCrushStage(){
+    public FXAnimalCrushStage(){
         StackPane mainPane = new StackPane();
         
-        FXCandyCrushCanvas paint = new FXCandyCrushCanvas();
+        FXAnimalCrushCanvas paint = new FXAnimalCrushCanvas();
         mainPane.getChildren().add(paint);
         
         //Adaptar el tamaño al canvas

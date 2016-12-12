@@ -1,4 +1,4 @@
-package candycrush.painter;
+package animalcrush.painter;
 
 import java.util.HashMap;
 import javafx.scene.image.Image;
