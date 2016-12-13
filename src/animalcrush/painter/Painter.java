@@ -4,6 +4,7 @@ import animalcrush.model.Animal;
 import animalcrush.model.AnimalCrush;
 import animalcrush.model.AnimalType;
 import animalcrush.model.Dimension;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -12,28 +13,28 @@ import javafx.scene.canvas.GraphicsContext;
 
 public class Painter {
 
-    static public void paint(AnimalCrush game, GraphicsContext context, Dimension world, Dimension window, int i1, int j1){
+    static public void paint(AnimalCrush game, GraphicsContext context, Dimension world, Dimension window, int i1, int j1, Insets margin){
         
         Animal[][] board = game.getBoard();
         for (int i = 0; i < game.getBoardHeight(); i++){
             for (int j = 0; j < game.getBoardWidth(); j++){
                 if( i == i1 && j == j1 ){
-                    Painter.draw(board[i][j], context, world, window);
-                    double x = Painter.xToWindow(board[i][j].getX(), world, window);
+                    Painter.draw(board[i][j], context, world, window, margin);
+                    double x = Painter.xToWindow(board[i][j].getX(), world, window) + (margin.getLeft() + margin.getRight())/2;
                     double y = Painter.yToWindow(board[i][j].getY(), world, window);
                     double width = Painter.xToWindow(.9, world, window);
                     double height = Painter.yToWindow(.9, world, window);
                     context.drawImage(Loader.getImage("marked.png"), x, y, width, height);
                 } else {
-                    Painter.draw(board[i][j], context, world, window);
+                    Painter.draw(board[i][j], context, world, window, margin);
                 }
             }
         }
     }
     
-    static private void draw(Animal candy, GraphicsContext context, Dimension world, Dimension window)
+    static private void draw(Animal candy, GraphicsContext context, Dimension world, Dimension window, Insets margin)
     {
-        double x = Painter.xToWindow(candy.getX(), world, window);
+        double x = Painter.xToWindow(candy.getX(), world, window) + (margin.getLeft() + margin.getRight())/2;
         double y = Painter.yToWindow(candy.getY(), world, window);
         double width = Painter.xToWindow(1, world, window);
         double height = Painter.yToWindow(1, world, window);

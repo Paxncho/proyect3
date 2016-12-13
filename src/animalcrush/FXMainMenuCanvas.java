@@ -52,6 +52,8 @@ public class FXMainMenuCanvas extends Canvas implements EventHandler, ChangeList
                     this.buttonSelected = 3;
                 else if (y > 505 && y < 555)
                     this.buttonSelected = 4;
+                else
+                    this.buttonSelected = -1;
             } else
                 this.buttonSelected = -1;
             

@@ -2,11 +2,13 @@ package animalcrush;
 
 import animalcrush.model.AnimalCrush;
 import animalcrush.model.Dimension;
+import animalcrush.painter.Loader;
 import animalcrush.painter.Painter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
@@ -25,6 +27,9 @@ public class FXAnimalCrushCanvas extends Canvas implements EventHandler, ChangeL
     private int firstY;
     private int lastX;
     private int lastY;
+    
+    private Insets margin;
+    private Dimension window;
 
     public FXAnimalCrushCanvas(int x, int y){
         this.animalCrush = new AnimalCrush(x, y);
@@ -39,12 +44,14 @@ public class FXAnimalCrushCanvas extends Canvas implements EventHandler, ChangeL
         this.firstSelected = false;
         this.firstX = -1;
         this.firstY = -1;
+        
+        this.margin = new Insets(25);
     }
 
     @Override
     public void handle(Event event){
 
-        Dimension window = new Dimension(this.getWidth(), this.getHeight());
+        this.window = new Dimension(this.getWidth() - this.margin.getLeft() - this.margin.getRight(), this.getHeight() - this.margin.getBottom() - this.margin.getTop());
 
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED){
             MouseEvent me = (MouseEvent) event;
@@ -91,12 +98,16 @@ public class FXAnimalCrushCanvas extends Canvas implements EventHandler, ChangeL
     public void draw(){
         this.context.clearRect(0, 0, this.getWidth(), this.getHeight());
 
+        this.context.drawImage(Loader.getImage("background.jpg"), 0, 0, this.getWidth(), this.getHeight());
+        
         if (this.animalCrush != null){
-            Painter.paint(this.animalCrush, this.context, this.animalCrush.getWorld(), new Dimension(this.getWidth(), this.getHeight()), this.firstY, this.firstX);
+            this.window = new Dimension(this.getWidth() - this.margin.getLeft() - this.margin.getRight(), this.getHeight() - this.margin.getBottom() - this.margin.getTop());
+            Painter.paint(this.animalCrush, this.context, this.animalCrush.getWorld(), this.window, this.firstY, this.firstX, this.margin);
         }
     }
 
     private boolean checkMove(){
+        this.animalCrush.resetMultiplicator();
         return this.animalCrush.checkMove(this.firstX, this.firstY, this.lastX, this.lastY, this);
     }
 }

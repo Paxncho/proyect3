@@ -1,7 +1,10 @@
 package animalcrush;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -11,13 +14,15 @@ import javafx.stage.Stage;
 
 public class FXAnimalCrushStage extends Stage{
     
-    StackPane mainPane;
-    Canvas paint;
+    private StackPane mainPane;
+    private Canvas paint;
 
     public FXAnimalCrushStage(){
         this.mainPane = new StackPane();
 
         mainMenu();
+        this.setMinHeight(300);
+        this.setMinWidth(300);
         
         super.setTitle("Animal Crush");
         Scene scene = new Scene(mainPane, 600, 600);
@@ -43,12 +48,31 @@ public class FXAnimalCrushStage extends Stage{
     public void changeCanvas(int i){
         this.mainPane.getChildren().remove(this.paint);
         switch(i){
-            case 1: playGame(); break;
+            case 1: GamePane(9,9); break;
             case 2: mainMenu(); break;
         }
     }
     
     public void closeWindow(){
         this.close();
+    }
+    
+    private void GamePane(int x, int y){
+        BorderPane manPane = new BorderPane();
+        HBox hbox = new HBox();
+        
+        hbox.setPadding(new Insets(15, 12, 85, 12));
+        hbox.setSpacing(10);
+        hbox.setStyle("-fx-background-color: #336699;");
+
+        
+        FXAnimalCrushCanvas canvas = new FXAnimalCrushCanvas(x, y);
+        canvas.widthProperty().bind(mainPane.widthProperty());
+        canvas.heightProperty().bind(mainPane.heightProperty());
+        
+        manPane.setTop(hbox);
+        manPane.setCenter(canvas);
+        
+        this.mainPane.getChildren().add(manPane);
     }
 }

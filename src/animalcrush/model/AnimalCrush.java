@@ -285,13 +285,14 @@ public class AnimalCrush {
                             this.board[k][j].setType(this.board[k-1][j].getType());
                         } else {
                             //Si mi dulce está hasta arriba, creo un random
-                            this.board[k][j].setType(AnimalType.WHITE);
+                            this.board[k][j].setType(this.getRandomAnimalType());
                         }
                     }                    
                     this.board[i][j].setInLine(false);
                 }
             }
-        }     
+        }
+        System.out.println("PUNTAJE: " + this.score);
     }
     
     private void checkNewBoard(){
