@@ -1,5 +1,6 @@
 package animalcrush.model;
 
+import animalcrush.FXAnimalCrushCanvas;
 import java.util.Random;
 
 /**
@@ -20,6 +21,8 @@ public class AnimalCrush {
     private int right;
     private int bottom;
     
+    private FXAnimalCrushCanvas canvas;
+    
     public AnimalCrush(int totalCandiesHorizontal, int totalCandiesVertical){
         this.score = 0;
         this.multiplier = 1;
@@ -32,7 +35,15 @@ public class AnimalCrush {
         //Inicilizar los dulces
         for (int i = 0; i < totalCandiesVertical; i++){
             for (int j = 0; j < totalCandiesHorizontal; j++){
-                this.board[i][j] = this.getRandomAnimal(j, i);
+                int k = (i + j/2)%9;
+                switch(k){
+                    case 0: case 6: this.board[i][j] = new Animal(j, i, AnimalType.CHICK); break;
+                    case 1: case 7: this.board[i][j] = new Animal(j, i, AnimalType.FOX); break;
+                    case 2: case 8: this.board[i][j] = new Animal(j, i, AnimalType.HEDGEHOG); break;
+                    case 3: this.board[i][j] = new Animal(j, i, AnimalType.TIGER); break;
+                    case 4: this.board[i][j] = new Animal(j, i, AnimalType.KOALA); break;
+                    case 5: this.board[i][j] = new Animal(j, i, AnimalType.PIG); break;
+                }                
             }
         }
     }
@@ -65,23 +76,24 @@ public class AnimalCrush {
         this.multiplier = 1;
     }
     
-    private Animal getRandomAnimal(int x, int y){
+    private AnimalType getRandomAnimalType(){
         Random random = new Random();
         AnimalType type = AnimalType.FOX;
         
         switch(random.nextInt()%6){
-            case 0: type = AnimalType.HIPPOPOTAMUS; break;
+            case 0: type = AnimalType.CHICK; break;
             case 1: type = AnimalType.KOALA; break;
             case 2: type = AnimalType.TIGER; break;
             case 3: type = AnimalType.HEDGEHOG; break;
             case 4: type = AnimalType.PIG; break;
         }
 
-        return new Animal(x, y, type);
+        return type;
     }
     
     //Reviso si el movimiento es válido
-    public boolean checkMove(int x1, int y1, int x2, int y2){
+    public boolean checkMove(int x1, int y1, int x2, int y2, FXAnimalCrushCanvas canvas){
+        this.canvas = canvas;
         Boolean validMove = false;
         Movement move = null;
         if (x2 - x1 >= 1){
@@ -94,68 +106,68 @@ public class AnimalCrush {
             move = Movement.UP;
         }
 
-        Animal aux = null;
+        AnimalType aux = null;
 
         if (move != null){
             validMove = true;
             switch(move){
                 case RIGHT:
                     //Intercambio los dulces
-                    aux = this.board[y1][x1];
-                    this.board[y1][x1] = this.board[y1][x1+1];
-                    this.board[y1][x1+1] = aux;
-
+                    aux = this.board[y1][x1].getType();
+                    this.board[y1][x1].setType(this.board[y1][x1+1].getType());
+                    this.board[y1][x1+1].setType(aux);
+                    
                     //Checkeo si el movimiento es valido
-                    /*if (check3OnLine(x1, y1) || check3OnLine(x1+1, y1))
+                    if (check3OnLine(x1, y1) || check3OnLine(x1+1, y1))
                         validMove = true;
                     //Caso contrario, devuelvo los dulces
                     else{
-                        aux = this.board[y1][x1];
-                        this.board[y1][x1] = this.board[y1][x1+1];
-                        this.board[y1][x1+1] = aux;
-                    }*/
+                        aux = this.board[y1][x1].getType();
+                        this.board[y1][x1].setType(this.board[y1][x1+1].getType());
+                        this.board[y1][x1+1].setType(aux);
+                    }
 
                     break;
                 case LEFT:
-                    aux = this.board[y1][x1];
-                    this.board[y1][x1] = this.board[y1][x1-1];
-                    this.board[y1][x1-1] = aux;
+                    aux = this.board[y1][x1].getType();
+                    this.board[y1][x1].setType(this.board[y1][x1-1].getType());
+                    this.board[y1][x1-1].setType(aux);
 
-                    /*if (check3OnLine(x1, y1) || check3OnLine(x1-1, y1))
+                    if (check3OnLine(x1, y1) || check3OnLine(x1-1, y1))
                         validMove = true;
                     else{
-                        aux = this.board[y1][x1];
-                        this.board[y1][x1] = this.board[y1][x1-1];
-                        this.board[y1][x1-1] = aux;
-                    }*/
+                        aux = this.board[y1][x1].getType();
+                        this.board[y1][x1].setType(this.board[y1][x1-1].getType());
+                        this.board[y1][x1-1].setType(aux);
+                    }
 
                     break;
                 case UP:
-                    aux = this.board[y1][x1];
-                    this.board[y1][x1] = this.board[y1-1][x1];
-                    this.board[y1-1][x1] = aux;
+                    aux = this.board[y1][x1].getType();
+                    this.board[y1][x1].setType(this.board[y1-1][x1].getType());
+                    this.board[y1-1][x1].setType(aux);
 
-                    /*if (check3OnLine(x1, y1) || check3OnLine(x1, y1-1))
+                    if (check3OnLine(x1, y1) || check3OnLine(x1, y1-1))
                         validMove = true;
                     else {
-                        aux = this.board[y1][x1];
-                        this.board[y1][x1] = this.board[y1-1][x1];
-                        this.board[y1-1][x1] = aux;    
-                    }*/
+                        aux = this.board[y1][x1].getType();
+                        this.board[y1][x1].setType(this.board[y1-1][x1].getType());
+                        this.board[y1-1][x1].setType(aux);
+                    }
 
                     break;
                 case DOWN:
-                    aux = this.board[y1][x1];
-                    this.board[y1][x1] = this.board[y1+1][x1];
-                    this.board[y1+1][x1] = aux;
+                    aux = this.board[y1][x1].getType();
+                    this.board[y1][x1].setType(this.board[y1+1][x1].getType());
+                    this.board[y1+1][x1].setType(aux);
 
-                    /*if (check3OnLine(x1, y1) || check3OnLine(x1, y1+1))
+                    if (check3OnLine(x1, y1) || check3OnLine(x1, y1+1))
                         validMove = true;
                     else {
-                        aux = this.board[y1][x1];
-                        this.board[y1][x1] = this.board[y1+1][x1];
-                        this.board[y1+1][x1] = aux;    
-                    }*/
+                        aux = this.board[y1][x1].getType();
+                        this.board[y1][x1].setType(this.board[y1+1][x1].getType());
+                        this.board[y1+1][x1].setType(aux);
+                    }
                     break;
             }
 
@@ -169,6 +181,7 @@ public class AnimalCrush {
     
     //Revisa si hay dulces por eliminar, si los hay, llama a onLine()
     private boolean check3OnLine(int x, int y){
+        this.canvas.draw();
         boolean validMove = false;
         
         //Revisar vertical cuando el y está en 0
@@ -263,10 +276,10 @@ public class AnimalCrush {
                     //Mover todos los dulces hacía abajo
                     for (int k = i; k >= 0; k--){
                         if (k != 0){
-                            this.board[i][j] = this.board[i-1][j];
+                            this.board[i][j].setType(this.board[i-1][j].getType());
                         } else {
                             //Si mi dulce está hasta arriba, creo un random
-                            this.board[i][j] = this.getRandomAnimal(j, i);
+                            this.board[i][j].setType(this.getRandomAnimalType());
                         }
                     }
                     //Guardar coordenadas para posterior revisión
@@ -318,6 +331,7 @@ public class AnimalCrush {
     }
     
     private void checkNewBoard(){
+        this.canvas.draw();
         boolean runs = false;
         for (int i = 0; i < this.bottom; i++){
             for (int j = this.left; j < this.right; j++){
