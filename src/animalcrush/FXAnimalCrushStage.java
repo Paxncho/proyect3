@@ -17,23 +17,38 @@ public class FXAnimalCrushStage extends Stage{
     public FXAnimalCrushStage(){
         this.mainPane = new StackPane();
 
-        iniciarJuego();
+        mainMenu();
         
+        super.setTitle("Animal Crush");
         Scene scene = new Scene(mainPane, 600, 600);
         super.setScene(scene);
     }
     
-    private void iniciarJuego(){
+    private void playGame(){
         this.paint = new FXAnimalCrushCanvas(9, 9);
         //Adaptar el tamaño al canvas
         this.paint.widthProperty().bind(mainPane.widthProperty());
         this.paint.heightProperty().bind(mainPane.heightProperty());
         
         this.mainPane.getChildren().add(paint);
-        super.setTitle("Animal Crush");
     }
     
-    public void borrarJuego(){
+    private void mainMenu(){
+        this.paint = new FXMainMenuCanvas(this);
+        this.paint.widthProperty().bind(mainPane.widthProperty());
+        this.paint.heightProperty().bind(mainPane.heightProperty());
+        this.mainPane.getChildren().add(paint);
+    }
+    
+    public void changeCanvas(int i){
         this.mainPane.getChildren().remove(this.paint);
+        switch(i){
+            case 1: playGame(); break;
+            case 2: mainMenu(); break;
+        }
+    }
+    
+    public void closeWindow(){
+        this.close();
     }
 }

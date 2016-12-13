@@ -10,7 +10,8 @@ public enum AnimalType{
     KOALA("koala.png"),
     CHICK("chick.png"),
     PIG("pig.png"),
-    TIGER("tiger.png");
+    TIGER("tiger.png"),
+    WHITE("");
 
     private final String filename;
 

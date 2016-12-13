@@ -2,6 +2,7 @@ package animalcrush.painter;
 
 import animalcrush.model.Animal;
 import animalcrush.model.AnimalCrush;
+import animalcrush.model.AnimalType;
 import animalcrush.model.Dimension;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -36,7 +37,9 @@ public class Painter {
         double y = Painter.yToWindow(candy.getY(), world, window);
         double width = Painter.xToWindow(1, world, window);
         double height = Painter.yToWindow(1, world, window);
-        context.drawImage(Loader.getImage(candy.getType().getFilename()), x, y, width, height);
+        
+        if(candy.getType() != AnimalType.WHITE)
+            context.drawImage(Loader.getImage(candy.getType().getFilename()), x, y, width, height);
     }
     
     static public double xToWindow(double x, Dimension world, Dimension window){

@@ -12,8 +12,8 @@ public class AnimalCrush {
 
     private Dimension world;
     private Animal[][] board;
-    private int totalCandiesHorizontal;
-    private int totalCandiesVertical;
+    private int animalsHorizontal;
+    private int animalsVertical;
     private int score;
     private int multiplier;
     
@@ -28,8 +28,8 @@ public class AnimalCrush {
         this.multiplier = 1;
         this.world = new Dimension(totalCandiesHorizontal, totalCandiesVertical);
         
-        this.totalCandiesHorizontal = totalCandiesHorizontal;
-        this.totalCandiesVertical = totalCandiesVertical;
+        this.animalsHorizontal = totalCandiesHorizontal;
+        this.animalsVertical = totalCandiesVertical;
         this.board = new Animal[totalCandiesVertical][totalCandiesHorizontal];
         
         //Inicilizar los dulces
@@ -57,11 +57,11 @@ public class AnimalCrush {
     }
     
     public int getBoardWidth(){
-        return this.totalCandiesHorizontal;
+        return this.animalsHorizontal;
     }
     
     public int getBoardHeight(){
-        return this.totalCandiesVertical;
+        return this.animalsVertical;
     }
     
     public int getScore(){
@@ -94,7 +94,9 @@ public class AnimalCrush {
     //Reviso si el movimiento es válido
     public boolean checkMove(int x1, int y1, int x2, int y2, FXAnimalCrushCanvas canvas){
         this.canvas = canvas;
-        Boolean validMove = false;
+        boolean validMove = false;
+        boolean Move1;
+        boolean Move2;
         Movement move = null;
         if (x2 - x1 >= 1){
             move = Movement.RIGHT;
@@ -117,8 +119,10 @@ public class AnimalCrush {
                     this.board[y1][x1].setType(this.board[y1][x1+1].getType());
                     this.board[y1][x1+1].setType(aux);
                     
+                    Move1 = checkLine(x1, y1);
+                    Move2 = checkLine(x1+1, y1);
                     //Checkeo si el movimiento es valido
-                    if (check3OnLine(x1, y1) || check3OnLine(x1+1, y1))
+                    if (Move1 || Move2)
                         validMove = true;
                     //Caso contrario, devuelvo los dulces
                     else{
@@ -133,7 +137,10 @@ public class AnimalCrush {
                     this.board[y1][x1].setType(this.board[y1][x1-1].getType());
                     this.board[y1][x1-1].setType(aux);
 
-                    if (check3OnLine(x1, y1) || check3OnLine(x1-1, y1))
+                    Move1 = checkLine(x1, y1);
+                    Move2 = checkLine(x1-1, y1);
+                    
+                    if (Move1 || Move2)
                         validMove = true;
                     else{
                         aux = this.board[y1][x1].getType();
@@ -147,7 +154,10 @@ public class AnimalCrush {
                     this.board[y1][x1].setType(this.board[y1-1][x1].getType());
                     this.board[y1-1][x1].setType(aux);
 
-                    if (check3OnLine(x1, y1) || check3OnLine(x1, y1-1))
+                    Move1 = checkLine(x1, y1);
+                    Move2 = checkLine(x1, y1-1);
+                    
+                    if (Move1 || Move2)
                         validMove = true;
                     else {
                         aux = this.board[y1][x1].getType();
@@ -161,7 +171,10 @@ public class AnimalCrush {
                     this.board[y1][x1].setType(this.board[y1+1][x1].getType());
                     this.board[y1+1][x1].setType(aux);
 
-                    if (check3OnLine(x1, y1) || check3OnLine(x1, y1+1))
+                    Move1 = checkLine(x1, y1);
+                    Move2 = checkLine(x1, y1+1);
+                    
+                    if (Move1 || Move2)
                         validMove = true;
                     else {
                         aux = this.board[y1][x1].getType();
@@ -179,86 +192,77 @@ public class AnimalCrush {
         return validMove;
     }
     
-    //Revisa si hay dulces por eliminar, si los hay, llama a onLine()
-    private boolean check3OnLine(int x, int y){
-        this.canvas.draw();
-        boolean validMove = false;
+    private boolean checkLine(int x, int y){
+        boolean line = false;
+        int j = x;
+        int index1 = 0;
+        int index2 = 0;
         
-        //Revisar vertical cuando el y está en 0
-        if (y == 0 && x >=0 && x < totalCandiesHorizontal){
-            //Revisar y, y+1, y+2
-            if(this.onLine(x, y, 1, 0, 2, 0))
-                validMove = true;
+        
+        //Index1 Fila
+        while(j >= 0){
+            if(j == 0){
+                index1 = j;
+            }else if (!this.board[y][j].getType().equals(this.board[y][j-1].getType())){
+                index1 = j;
+                break;
+            }
             
-        //Revisar vertical y = 1
-        } else if (y == 1 && x >=0 && x < totalCandiesHorizontal){
-            if (this.onLine(x, y, 1, 0, 2, 0))
-                validMove = true;
-            //Revisar y-1, y, y+1
-            else if (this.onLine(x, y, -1, 0, 1, 0))
-                validMove = true;
-            
-        //Revisar vertical en los casos intermedio
-        } else if (y > 0 && y < this.totalCandiesVertical-1 && x >=0 && x < totalCandiesHorizontal){
-            if (this.onLine(x, y, -1, 0, 1, 0))
-                validMove = true;
-            else if (this.onLine(x, y, 1, 0, 2, 0))
-                validMove = true;
-            //Revisar y-2, y-1, y
-            else if (this.onLine(x, y, -1, 0, -2, 0))
-                validMove = true;
-            
-        //Revisar vertical max - 1
-        } else if (y == this.totalCandiesVertical - 2 && x >= 0 & x < totalCandiesHorizontal){
-            if (this.onLine(x, y, -1, 0, 1, 0))
-                validMove = true;
-            else if (this.onLine(x, y, -1, 0, -2, 0))
-                validMove = true;
-            
-        //Revisar vertical cuando el y es el máximo
-        } else if (y == this.totalCandiesVertical - 1 && x >= 0 & x < totalCandiesHorizontal){
-            if (this.onLine(x, y, -1, 0, -2, 0))
-                validMove = true;
+            j--;
         }
         
-        //Revisar horizontal cuando x es 0
-        if (y >= 0 && y < this.totalCandiesVertical -1 && x == 0){
-            //Revisar x, x+1, x+2   
-            if (this.onLine(x, y, 0, 1, 0, 2))
-                validMove = true;
-
-        //Revisar horizontal cuando x es 1
-        } else if (y >= 0 && y < this.totalCandiesVertical -1 && x == 1){
-            if (this.onLine(x, y, 0, 1, 0, 2))
-                validMove = true;
-            //Revisar x-1, x, x+1
-            else if (this.onLine(x, y, 0, -1, 0, 1))
-                validMove = true;
+        j = x;
+        //Index2 Fila
+        while(j < this.animalsHorizontal){
+            if(j == this.animalsHorizontal-1){
+                index2 = j;
+            }else if (!this.board[y][j].getType().equals(this.board[y][j+1].getType())){
+                index2 = j;
+                break;
+            }
             
-        //Revisar horizontal en los casos intermedios
-        } else if (y >= 0 && y < this.totalCandiesVertical && x > 0 && x < totalCandiesHorizontal - 1){
-            if (this.onLine(x, y, 0, 1, 0, 2))
-                validMove = true;
-            else if (this.onLine(x, y, 0, -1, 0, 1))
-                validMove = true;
-            //Revisar x-2, x-1, x
-            else if (this.onLine(x, y, 0, -1, 0, -2))
-                validMove = true;
-
-        //Revisar horizontal cuando x es el máximo - 1
-        } else if (y >= 0 && y < this.totalCandiesVertical -1 && x == totalCandiesHorizontal - 2){
-            if (this.onLine(x, y, 0, -1, 0, 1))
-                validMove = true;
-            else if (this.onLine(x, y, 0, -1, 0, -2))
-                validMove = true;
-
-        //Revisar horizontal cuando x es el máximo
-        } else if (y >= 0 && y < this.totalCandiesVertical -1 && x == totalCandiesHorizontal - 1){
-            if (this.onLine(x, y, 0, -1, 0, -2))
-                validMove = true;
+            j++;
         }
         
-        return validMove;
+        if((index2 -  index1) > 1){
+            for(int i = index1; i <= index2; i++)
+                this.board[y][i].setInLine(true);
+            line = true;
+        }
+        
+        j = y;
+        //Index1 Columna
+        while(j >= 0){
+            if(j == 0){
+                index1 = j;
+            }else if (!this.board[j][x].getType().equals(this.board[j-1][x].getType())){
+                index1 = j;
+                break;
+            }
+            
+            j--;
+        }
+        
+        j = y;
+        //Index2 Columna
+        while(j < this.animalsVertical){
+            if(j == this.animalsVertical-1){
+                index2 = j;
+            }else if (!this.board[j][x].getType().equals(this.board[j+1][x].getType())){
+                index2 = j;
+                break;
+            }
+            
+            j++;
+        }
+        
+        if((index2 -  index1) > 1){
+            for(int i = index1; i <= index2; i++)
+                this.board[i][x].setInLine(true);
+            line = true;
+        }
+        
+        return line;
     }
     
     //Recorro el Array en busca de dulces por eliminar
@@ -266,82 +270,40 @@ public class AnimalCrush {
         this.left = 9;
         this.right = 0;
         this.bottom = 0;
-        for (int i = 0; i < this.totalCandiesVertical; i++){
-            for (int j = 0; j < this.totalCandiesHorizontal; j++){
+        
+        for (int i = 0; i < this.animalsVertical; i++){
+            for (int j = 0; j < this.animalsHorizontal; j++){
                 
                 //Si mi dulce está en linea, debe ser eliminado
                 if (this.board[i][j].isInLine()){
                     //Añadir puntaje
                     this.score += 10 * this.multiplier;
+                    
                     //Mover todos los dulces hacía abajo
                     for (int k = i; k >= 0; k--){
                         if (k != 0){
-                            this.board[i][j].setType(this.board[i-1][j].getType());
+                            this.board[k][j].setType(this.board[k-1][j].getType());
                         } else {
                             //Si mi dulce está hasta arriba, creo un random
-                            this.board[i][j].setType(this.getRandomAnimalType());
+                            this.board[k][j].setType(AnimalType.WHITE);
                         }
-                    }
-                    //Guardar coordenadas para posterior revisión
-                    if (j < this.left)
-                        this.left = j;
-                    if (j > this.right)
-                        this.right = j;
-                    if (i > this.bottom)
-                        this.bottom = i;
+                    }                    
+                    this.board[i][j].setInLine(false);
                 }
             }
-        }
-        
-        if (this.left != 9 && this.right != 0 && this.bottom != 0){
-            checkNewBoard();
-        }        
-    }
-    
-    public void showBoard(){
-        for (int i = 0; i < this.totalCandiesVertical; i++){
-            for (int j = 0; j < this.totalCandiesHorizontal; j++){
-                System.out.print(this.board[i][j].getType().ordinal());
-            }
-            System.out.println("");
-        }
-        System.out.println("---------------");
-    }
-    
-    //Marco dulces en linea
-    private boolean onLine(int x, int y, int a, int b, int c, int d){
-        //Verifico si estan en linea
-        if(this.board[y][x].getType().equals(this.board[y+a][x+b].getType()) && this.board[y][x].getType().equals(this.board[y+c][x+d].getType())){
-
-            //Marco el actual
-            this.board[y][x].setInLine(true);
-            
-                //Si los vecinos no están marcados, revisarlos
-                if (!this.board[y+a][x+b].isInLine())
-                    check3OnLine(x+b, y+a);
-                if (!this.board[y+c][x+d].isInLine())
-                    check3OnLine(x+d, y+c);
-                
-                //Marcar vecinos
-                this.board[y+a][x+b].setInLine(true);
-                this.board[y+c][x+d].setInLine(true);
-                return true;
-        }
-        return false;
+        }     
     }
     
     private void checkNewBoard(){
-        this.canvas.draw();
         boolean runs = false;
-        for (int i = 0; i < this.bottom; i++){
-            for (int j = this.left; j < this.right; j++){
-                if (check3OnLine(j, i))
+        
+        for (int i = 0; i < this.animalsVertical; i++){
+            for (int j = 0; j < this.animalsHorizontal; j++){
+                if(checkLine(j, i))
                     runs = true;
             }
         }
-        if (runs){
-            this.multiplier++;
-            refreshBoard();
-        }
+        if (runs)
+            this.refreshBoard();
     }
 }

@@ -25,7 +25,7 @@ public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMainMenuStage stage = new FXMainMenuStage();
+        FXAnimalCrushStage stage = new FXAnimalCrushStage();
         stage.show();
     }
     
