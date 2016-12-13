@@ -16,19 +16,18 @@ public class Painter {
         Animal[][] board = game.getBoard();
         for (int i = 0; i < game.getBoardHeight(); i++){
             for (int j = 0; j < game.getBoardWidth(); j++){
-                if( i == i1 && j == j1 )
-                {
-                    
-                }
-                else
-                {
+                if( i == i1 && j == j1 ){
+                    /*Painter.draw(board[i][j], context, world, window);
+                    double x = Painter.xToWindow(board[i][j].getX(), world, window);
+                    double y = Painter.yToWindow(board[i][j].getY(), world, window);
+                    double width = Painter.xToWindow(.9, world, window);
+                    double height = Painter.yToWindow(.9, world, window);
+                    context.drawImage(Loader.getImage("marked.png"), x, y, width, height);*/
+                } else {
                     Painter.draw(board[i][j], context, world, window);
                 }
-                System.out.print(board[i][j].getType().ordinal() + " ");
             }
-            System.out.println("");
         }
-        System.out.println("---------------");
     }
     
     static private void draw(Animal candy, GraphicsContext context, Dimension world, Dimension window)

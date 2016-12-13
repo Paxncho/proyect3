@@ -20,9 +20,6 @@ public class AnimalCrush {
     private int right;
     private int bottom;
     
-    private boolean running;
-    private boolean canRun;
-    
     public AnimalCrush(int totalCandiesHorizontal, int totalCandiesVertical){
         this.score = 0;
         this.multiplier = 1;
@@ -38,25 +35,10 @@ public class AnimalCrush {
                 this.board[i][j] = this.getRandomAnimal(j, i);
             }
         }
-        
-        this.running = false;
-        this.canRun = false;
     }
     
     public Dimension getWorld(){
         return this.world;
-    }
-    
-    public boolean isRunning(){
-        return this.running;
-    }
-    
-    public void setRunning(boolean running){
-        this.running = running;
-    }
-    
-    public boolean canRun(){
-        return this.canRun;
     }
     
     public Animal[][] getBoard(){
@@ -100,92 +82,88 @@ public class AnimalCrush {
     
     //Reviso si el movimiento es válido
     public boolean checkMove(int x1, int y1, int x2, int y2){
-        this.canRun = false;
         Boolean validMove = false;
-        if (x2 - x1 != y2 - y1 && this.isRunning()){
-            Movement move = null;
-            if (x2 - x1 >= 1){
-                move = Movement.RIGHT;
-            } else if (x2 - x1 <= -1){
-                move = Movement.LEFT;
-            } else if (y2 - y1 >= 1){
-                move = Movement.DOWN;
-            } else if (y2 - y1 <= -1){
-                move = Movement.UP;
-            }
-            
-            Animal aux = null;
-            
-            if (move != null){
-                validMove = true;
-                switch(move){
-                    case RIGHT:
-                        //Intercambio los dulces
+        Movement move = null;
+        if (x2 - x1 >= 1){
+            move = Movement.RIGHT;
+        } else if (x2 - x1 <= -1){
+            move = Movement.LEFT;
+        } else if (y2 - y1 >= 1){
+            move = Movement.DOWN;
+        } else if (y2 - y1 <= -1){
+            move = Movement.UP;
+        }
+
+        Animal aux = null;
+
+        if (move != null){
+            validMove = true;
+            switch(move){
+                case RIGHT:
+                    //Intercambio los dulces
+                    aux = this.board[y1][x1];
+                    this.board[y1][x1] = this.board[y1][x1+1];
+                    this.board[y1][x1+1] = aux;
+
+                    //Checkeo si el movimiento es valido
+                    /*if (check3OnLine(x1, y1) || check3OnLine(x1+1, y1))
+                        validMove = true;
+                    //Caso contrario, devuelvo los dulces
+                    else{
                         aux = this.board[y1][x1];
                         this.board[y1][x1] = this.board[y1][x1+1];
                         this.board[y1][x1+1] = aux;
-                        
-                        //Checkeo si el movimiento es valido
-                        /*if (check3OnLine(x1, y1) || check3OnLine(x1+1, y1))
-                            validMove = true;
-                        //Caso contrario, devuelvo los dulces
-                        else{
-                            aux = this.board[y1][x1];
-                            this.board[y1][x1] = this.board[y1][x1+1];
-                            this.board[y1][x1+1] = aux;
-                        }*/
-                        
-                        break;
-                    case LEFT:
+                    }*/
+
+                    break;
+                case LEFT:
+                    aux = this.board[y1][x1];
+                    this.board[y1][x1] = this.board[y1][x1-1];
+                    this.board[y1][x1-1] = aux;
+
+                    /*if (check3OnLine(x1, y1) || check3OnLine(x1-1, y1))
+                        validMove = true;
+                    else{
                         aux = this.board[y1][x1];
                         this.board[y1][x1] = this.board[y1][x1-1];
                         this.board[y1][x1-1] = aux;
-                        
-                        /*if (check3OnLine(x1, y1) || check3OnLine(x1-1, y1))
-                            validMove = true;
-                        else{
-                            aux = this.board[y1][x1];
-                            this.board[y1][x1] = this.board[y1][x1-1];
-                            this.board[y1][x1-1] = aux;
-                        }*/
-                        
-                        break;
-                    case UP:
+                    }*/
+
+                    break;
+                case UP:
+                    aux = this.board[y1][x1];
+                    this.board[y1][x1] = this.board[y1-1][x1];
+                    this.board[y1-1][x1] = aux;
+
+                    /*if (check3OnLine(x1, y1) || check3OnLine(x1, y1-1))
+                        validMove = true;
+                    else {
                         aux = this.board[y1][x1];
                         this.board[y1][x1] = this.board[y1-1][x1];
-                        this.board[y1-1][x1] = aux;
-                        
-                        /*if (check3OnLine(x1, y1) || check3OnLine(x1, y1-1))
-                            validMove = true;
-                        else {
-                            aux = this.board[y1][x1];
-                            this.board[y1][x1] = this.board[y1-1][x1];
-                            this.board[y1-1][x1] = aux;    
-                        }*/
-                        
-                        break;
-                    case DOWN:
+                        this.board[y1-1][x1] = aux;    
+                    }*/
+
+                    break;
+                case DOWN:
+                    aux = this.board[y1][x1];
+                    this.board[y1][x1] = this.board[y1+1][x1];
+                    this.board[y1+1][x1] = aux;
+
+                    /*if (check3OnLine(x1, y1) || check3OnLine(x1, y1+1))
+                        validMove = true;
+                    else {
                         aux = this.board[y1][x1];
                         this.board[y1][x1] = this.board[y1+1][x1];
-                        this.board[y1+1][x1] = aux;
-                        
-                        /*if (check3OnLine(x1, y1) || check3OnLine(x1, y1+1))
-                            validMove = true;
-                        else {
-                            aux = this.board[y1][x1];
-                            this.board[y1][x1] = this.board[y1+1][x1];
-                            this.board[y1+1][x1] = aux;    
-                        }*/
-                        break;
-                }
-                
-                if (validMove){
-                    this.refreshBoard();
-                    this.multiplier++;
-                }
+                        this.board[y1+1][x1] = aux;    
+                    }*/
+                    break;
             }
-        }
-        
+
+            if (validMove){
+                this.refreshBoard();
+                this.multiplier++;
+            }
+        }        
         return validMove;
     }
     
@@ -340,7 +318,6 @@ public class AnimalCrush {
     }
     
     private void checkNewBoard(){
-        this.canRun = false;
         boolean runs = false;
         for (int i = 0; i < this.bottom; i++){
             for (int j = this.left; j < this.right; j++){
@@ -348,9 +325,7 @@ public class AnimalCrush {
                     runs = true;
             }
         }
-        if (!runs){
-            this.canRun = true;
-        } else {
+        if (runs){
             this.multiplier++;
             refreshBoard();
         }
