@@ -32,15 +32,15 @@ public class Painter {
         }
     }
     
-    static private void draw(Animal candy, GraphicsContext context, Dimension world, Dimension window, Insets margin)
+    static private void draw(Animal animal, GraphicsContext context, Dimension world, Dimension window, Insets margin)
     {
-        double x = Painter.xToWindow(candy.getX(), world, window) + (margin.getLeft() + margin.getRight())/2;
-        double y = Painter.yToWindow(candy.getY(), world, window);
+        double x = Painter.xToWindow(animal.getX(), world, window) + (margin.getLeft() + margin.getRight())/2;
+        double y = Painter.yToWindow(animal.getY(), world, window);
         double width = Painter.xToWindow(1, world, window);
         double height = Painter.yToWindow(1, world, window);
         
-        if(candy.getType() != AnimalType.WHITE)
-            context.drawImage(Loader.getImage(candy.getType().getFilename()), x, y, width, height);
+        if(animal.getType() != AnimalType.WHITE)
+            context.drawImage(Loader.getImage(animal.getType().getFilename()), x, y, width, height);
     }
     
     static public double xToWindow(double x, Dimension world, Dimension window){

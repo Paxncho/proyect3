@@ -30,9 +30,12 @@ public class FXAnimalCrushCanvas extends Canvas implements EventHandler, ChangeL
     
     private Insets margin;
     private Dimension window;
+    private FXAnimalCrushStage parent;
 
-    public FXAnimalCrushCanvas(int x, int y){
-        this.animalCrush = new AnimalCrush(x, y);
+    public FXAnimalCrushCanvas(int index, FXAnimalCrushStage parent){
+        System.out.println("INDEX " + index);
+        this.parent = parent;
+        this.animalCrush = new AnimalCrush(index);
         this.context = super.getGraphicsContext2D();
 
         this.addEventHandler(MouseEvent.MOUSE_PRESSED, this);
@@ -106,8 +109,15 @@ public class FXAnimalCrushCanvas extends Canvas implements EventHandler, ChangeL
         }
     }
 
-    private boolean checkMove(){
+    private void checkMove(){
         this.animalCrush.resetMultiplicator();
-        return this.animalCrush.checkMove(this.firstX, this.firstY, this.lastX, this.lastY, this);
+        this.animalCrush.checkMove(this.firstX, this.firstY, this.lastX, this.lastY);
+        
+        if (this.animalCrush.checkWin()){
+            this.parent.youWin();
+            
+        } else if (this.animalCrush.checkLose()){
+            this.parent.youLose();
+        }
     }
 }

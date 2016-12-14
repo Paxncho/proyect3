@@ -1,6 +1,5 @@
 package animalcrush.model;
 
-import animalcrush.FXAnimalCrushCanvas;
 import java.util.Random;
 
 /**
@@ -15,37 +14,23 @@ public class AnimalCrush {
     private int animalsHorizontal;
     private int animalsVertical;
     private int score;
-    private int multiplier;
+    private double multiplier;
+    private int index;
+    private int moves;
+    private int scoreGoal;
     
-    private int left;
-    private int right;
-    private int bottom;
-    
-    private FXAnimalCrushCanvas canvas;
-    
-    public AnimalCrush(int totalCandiesHorizontal, int totalCandiesVertical){
+    public AnimalCrush(int index){
+        this.index = index;
         this.score = 0;
         this.multiplier = 1;
-        this.world = new Dimension(totalCandiesHorizontal, totalCandiesVertical);
         
-        this.animalsHorizontal = totalCandiesHorizontal;
-        this.animalsVertical = totalCandiesVertical;
-        this.board = new Animal[totalCandiesVertical][totalCandiesHorizontal];
+        this.board = Level.generateLevel(this.index);
+        this.animalsHorizontal = Level.getSizeLevel(this.index);
+        this.animalsVertical = Level.getSizeLevel(this.index);
+        this.moves = Level.getMovesCount(this.index);
+        this.scoreGoal = Level.getScoreGoal(this.index);
         
-        //Inicilizar los dulces
-        for (int i = 0; i < totalCandiesVertical; i++){
-            for (int j = 0; j < totalCandiesHorizontal; j++){
-                int k = (i + j/2)%9;
-                switch(k){
-                    case 0: case 6: this.board[i][j] = new Animal(j, i, AnimalType.CHICK); break;
-                    case 1: case 7: this.board[i][j] = new Animal(j, i, AnimalType.FOX); break;
-                    case 2: case 8: this.board[i][j] = new Animal(j, i, AnimalType.HEDGEHOG); break;
-                    case 3: this.board[i][j] = new Animal(j, i, AnimalType.TIGER); break;
-                    case 4: this.board[i][j] = new Animal(j, i, AnimalType.KOALA); break;
-                    case 5: this.board[i][j] = new Animal(j, i, AnimalType.PIG); break;
-                }                
-            }
-        }
+        this.world = new Dimension(this.animalsHorizontal, this.animalsVertical);
     }
     
     public Dimension getWorld(){
@@ -80,24 +65,43 @@ public class AnimalCrush {
         Random random = new Random();
         AnimalType type = AnimalType.FOX;
         
-        switch(random.nextInt()%6){
-            case 0: type = AnimalType.CHICK; break;
-            case 1: type = AnimalType.KOALA; break;
-            case 2: type = AnimalType.TIGER; break;
-            case 3: type = AnimalType.HEDGEHOG; break;
-            case 4: type = AnimalType.PIG; break;
+        switch(this.index){
+            case 0: case 1: case 2: case 3:      
+                switch(random.nextInt()%4){
+                    case 0: type = AnimalType.CHICK; break;
+                    case 1: type = AnimalType.KOALA; break;
+                    case 2: type = AnimalType.TIGER; break;
+                }
+                break;
+            case 4: case 5: case 6: case 7:
+                switch(random.nextInt()%5){
+                    case 0: type = AnimalType.CHICK; break;
+                    case 1: type = AnimalType.KOALA; break;
+                    case 2: type = AnimalType.TIGER; break;
+                    case 3: type = AnimalType.HEDGEHOG; break;
+                }
+                break;
+            case 8: case 9:
+                switch(random.nextInt()%6){
+                    case 0: type = AnimalType.CHICK; break;
+                    case 1: type = AnimalType.KOALA; break;
+                    case 2: type = AnimalType.TIGER; break;
+                    case 3: type = AnimalType.HEDGEHOG; break;
+                    case 4: type = AnimalType.PIG; break;
+                }
+                break;
         }
 
         return type;
     }
     
     //Reviso si el movimiento es válido
-    public boolean checkMove(int x1, int y1, int x2, int y2, FXAnimalCrushCanvas canvas){
-        this.canvas = canvas;
+    public boolean checkMove(int x1, int y1, int x2, int y2){
         boolean validMove = false;
         boolean Move1;
         boolean Move2;
         Movement move = null;
+        
         if (x2 - x1 >= 1){
             move = Movement.RIGHT;
         } else if (x2 - x1 <= -1){
@@ -185,13 +189,16 @@ public class AnimalCrush {
             }
 
             if (validMove){
+                this.moves--;
                 this.refreshBoard();
                 this.multiplier++;
+                this.checkNewBoard();
             }
         }        
         return validMove;
     }
     
+    //Reviso la Linea
     private boolean checkLine(int x, int y){
         boolean line = false;
         int j = x;
@@ -267,9 +274,6 @@ public class AnimalCrush {
     
     //Recorro el Array en busca de dulces por eliminar
     private void refreshBoard(){
-        this.left = 9;
-        this.right = 0;
-        this.bottom = 0;
         
         for (int i = 0; i < this.animalsVertical; i++){
             for (int j = 0; j < this.animalsHorizontal; j++){
@@ -296,15 +300,31 @@ public class AnimalCrush {
     }
     
     private void checkNewBoard(){
-        boolean runs = false;
+        int i = this.animalsVertical -1;
+        int j = this.animalsHorizontal -1;
         
-        for (int i = 0; i < this.animalsVertical; i++){
-            for (int j = 0; j < this.animalsHorizontal; j++){
-                if(checkLine(j, i))
-                    runs = true;
+        while(i >= 0){
+            j = this.animalsVertical - 1;
+            while(j >= 0){
+                if (checkLine(j, i)){
+                    refreshBoard();
+                    this.multiplier += .1;
+                    i = this.animalsVertical-1;
+                    j = this.animalsHorizontal-1;
+                }                
+                j--;
             }
+            i--;
         }
-        if (runs)
-            this.refreshBoard();
+    }
+
+    public boolean checkWin(){
+        System.out.println("Actual: " + this.score + " Goal: " + this.scoreGoal);
+        return this.score > this.scoreGoal;
+    }
+
+    public boolean checkLose(){
+        System.out.println("Moves Left: " + this.moves);
+        return this.moves < 1;
     }
 }

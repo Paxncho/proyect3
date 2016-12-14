@@ -3,6 +3,8 @@ package animalcrush;
 import animalcrush.model.Dimension;
 import animalcrush.painter.Loader;
 import animalcrush.painter.Painter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
@@ -61,7 +63,13 @@ public class FXMainMenuCanvas extends Canvas implements EventHandler, ChangeList
         
         if (event.getEventType() == MouseEvent.MOUSE_PRESSED){
             switch(this.buttonSelected){
-                case 1: parent.changeCanvas(1); break;
+                case 1: {
+                    try{
+                        parent.changeCanvas(1);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(FXMainMenuCanvas.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } break;
                 case 2: break;
                 case 3: break;
                 case 4: parent.closeWindow(); break;
